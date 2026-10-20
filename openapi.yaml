@@ -1,0 +1,127 @@
+openapi: 3.0.4
+info:
+  title: PDF Page Numbers
+  description: >-
+    PDF Page Numbers stamps a page number on every page of a PDF, uploaded or
+    fetched from a URL, and returns a download link to the numbered file. Choose
+    the corner or edge and the font size. Paid plans can also set a label format
+    such as Page 3 of 12, the starting number, and skip a cover page.
+  termsOfService: https://apiverve.com/terms/
+  contact:
+    name: APIVerve Support
+    email: hello@apiverve.com
+    url: https://apiverve.com/contact
+  version: 1.0.0
+externalDocs:
+  description: Learn more about APIVerve
+  url: https://docs.apiverve.com?utm_source=openapi
+servers:
+  - url: https://api.apiverve.com/
+paths:
+  /v1/pdfpagenumbers:
+    post:
+      summary: PDF Page Numbers
+      description: Stamp page numbers on an uploaded PDF or a PDF URL
+      operationId: pdfpagenumbers
+      parameters:
+        - name: position
+          in: query
+          schema:
+            type: string
+          required: false
+          description: Where to place the number
+          example: bottom-center
+        - name: fontSize
+          in: query
+          schema:
+            type: number
+          required: false
+          description: Font size in points, from 6 to 36
+          example: 10
+        - name: format
+          in: query
+          schema:
+            type: string
+          required: false
+          description: >-
+            Label template containing {page}, and optionally {total}, such as
+            Page {page} of {total}
+          example: Page {page} of {total}
+        - name: startAt
+          in: query
+          schema:
+            type: integer
+          required: false
+          description: Number for the first numbered page
+          example: 1
+        - name: skipFirst
+          in: query
+          schema:
+            type: boolean
+          required: false
+          description: Leave the first page (a cover) unnumbered
+          example: false
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: status
+                  error:
+                    type: string
+                    description: error
+                  data:
+                    type: object
+                    description: data
+              example:
+                status: ok
+                error: null
+                data:
+                  pdfName: 5c9f95f9-9719-47c3-a923-be3bc1f1dc91.pdf
+                  pageCount: 2
+                  numberedPages: 2
+                  position: bottom-center
+                  format: Page {page} of {total}
+                  startAt: 1
+                  lastLabel: Page 2 of 2
+                  size: 6218
+                  expires: 1792230037933
+                  downloadURL: https://storage.googleapis.com/apiverve/APIData/pdfpagenumbers/5c9f95f9-9719-47c3-a923-be3bc1f1dc91.pdf?GoogleAccessId=635500398038-compute%40developer.gserviceaccount.com&Expires=1792230037&Signature=a2sCOtSuSIIEWobe8wq5iHcCdqlJMXhrHE9ewxXsf7qrNBK3NHtxrQYk%2Fn1Jpr08aQBVtJclbKX6CFqRigV2IL4suv%2F%2B8WF9LRX%2BhY%2Frhvkw9RfdydlsvALhpPxnxv547eShgBIsuwvEOPFry%2F1J%2FCvt3X%2BT8Iwpz9EtJJVKH8C3u8u26%2FlNjj7XcRCqx6hcVIWvkJEVuZfMQUjlcbtF4IOwvITwlIQW9ChPzMIlXdXu2amBIy9PinQoKsdVopBfTre4W%2BTH6%2BgynWlvnJAHmxM6mWdfLQxTjCyFzdT4ZmJuq%2BRM36d41N62KxiTGyP1cs0YJECt36nI3a7FTzUOrA%3D%3D
+        '401':
+          description: Your request was not authorized, or your API Key was invalid
+        '404':
+          description: Requested resource was not found
+        '500':
+          description: A server error has occurred, try again later
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                pdf:
+                  type: string
+                  format: binary
+                  description: 'File to upload (accepted: .pdf, max 10MB)'
+                  x-acceptedTypes:
+                    - .pdf
+                  x-maxSizeMB: 10
+              required:
+                - pdf
+components:
+  securitySchemes:
+    api_key:
+      type: apiKey
+      name: x-api-key
+      in: header
+security:
+  - api_key: []
+sampleRequest:
+  format: Page {page} of {total}
+  pdf: https://raw.githubusercontent.com/mozilla/pdf.js/master/test/pdfs/rotation.pdf
