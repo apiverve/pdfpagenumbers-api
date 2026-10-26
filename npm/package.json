@@ -1,6 +1,6 @@
 {
   "name": "@apiverve/pdfpagenumbers",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "PDF Page Numbers stamps a page number on every page of a PDF, uploaded or fetched from a URL, and returns a download link to the numbered file. Choose the corner or edge and the font size. Paid plans can also set a label format such as Page 3 of 12, the starting number, and skip a cover page.",
   "main": "index.js",
   "types": "index.d.ts",
